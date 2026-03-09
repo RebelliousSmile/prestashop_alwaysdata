@@ -51,14 +51,10 @@ class HtaccessService
             throw new \InvalidArgumentException(sprintf('Invalid IP address: %s', $ip));
         }
 
-        try {
-            $htaccessPath = $this->getHtaccessPath();
-            $current = file_get_contents($htaccessPath);
-            if ($current === false) {
-                $current = '';
-            }
-        } catch (\Throwable $e) {
-            $current = '';
+        $htaccessPath = $this->getHtaccessPath();
+        $current = @file_get_contents($htaccessPath);
+        if ($current === false) {
+            throw new \RuntimeException(sprintf('Cannot read .htaccess at %s', $htaccessPath));
         }
 
         $block = "\n# sc_alwaysdata block: {$ip}\n"
@@ -74,14 +70,10 @@ class HtaccessService
     {
         $ua = str_replace(['"', '\\'], '', $ua);
 
-        try {
-            $htaccessPath = $this->getHtaccessPath();
-            $current = file_get_contents($htaccessPath);
-            if ($current === false) {
-                $current = '';
-            }
-        } catch (\Throwable $e) {
-            $current = '';
+        $htaccessPath = $this->getHtaccessPath();
+        $current = @file_get_contents($htaccessPath);
+        if ($current === false) {
+            throw new \RuntimeException(sprintf('Cannot read .htaccess at %s', $htaccessPath));
         }
 
         $block = "\n# sc_alwaysdata block UA: {$ua}\n"

@@ -98,6 +98,8 @@
     </div>
 </div>
 
+<input type="hidden" id="csrf-apply-block" value="{{ csrf_token('sc_alwaysdata_apply_block') }}">
+
 {# ------------------------------------------------------------------ #}
 {# Section 3: Results (populated by JS)                                 #}
 {# ------------------------------------------------------------------ #}
@@ -340,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getCsrfToken() {
-        var input = document.querySelector('input[name="_token"]');
+        var input = document.getElementById('csrf-apply-block');
         return input ? input.value : '';
     }
 

@@ -49,9 +49,8 @@ class sc_alwaysdata extends Module
 
     public function install(): bool
     {
-        Configuration::set(self::CONFIG_HTACCESS_PATH, _PS_ROOT_DIR_ . '/.htaccess');
-
-        return parent::install();
+        return parent::install()
+            && (bool) Configuration::set(self::CONFIG_HTACCESS_PATH, _PS_ROOT_DIR_ . '/.htaccess');
     }
 
     public function uninstall(): bool

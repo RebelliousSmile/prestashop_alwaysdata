@@ -114,7 +114,17 @@ class ScAlwaysdataController extends FrameworkBundleAdminController
             $phpErrors = $this->phpErrorAnalyserService->analyse($sources);
 
             foreach ($crawlers as &$entry) {
-                $entry['already_blocked'] = in_array($entry['ip'], $blockedIps, true);
+                $ipBlocked = in_array($entry['ip'], $blockedIps, true);
+                $uaBlocked = false;
+                foreach ($entry['user_agents'] as $ua) {
+                    foreach ($blockedUAs as $blockedUa) {
+                        if (stripos($ua, $blockedUa) !== false) {
+                            $uaBlocked = true;
+                            break 2;
+                        }
+                    }
+                }
+                $entry['already_blocked'] = $ipBlocked || $uaBlocked;
             }
             unset($entry);
 
