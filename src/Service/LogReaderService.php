@@ -115,25 +115,27 @@ class LogReaderService
             return [];
         }
 
-        fseek($fh, 0, SEEK_END);
-        $fileSize = ftell($fh);
-        $chunkSize = 8192;
-        $buffer = '';
-        $pos = $fileSize;
-        $lines = [];
+        try {
+            fseek($fh, 0, SEEK_END);
+            $fileSize = ftell($fh);
+            $chunkSize = 8192;
+            $buffer = '';
+            $pos = $fileSize;
+            $lines = [];
 
-        while (count($lines) <= $maxLines && $pos > 0) {
-            $readSize = min($chunkSize, $pos);
-            $pos -= $readSize;
-            fseek($fh, $pos);
-            $buffer = fread($fh, $readSize) . $buffer;
-            $lines = explode("\n", $buffer);
+            while (count($lines) <= $maxLines && $pos > 0) {
+                $readSize = min($chunkSize, $pos);
+                $pos -= $readSize;
+                fseek($fh, $pos);
+                $buffer = fread($fh, $readSize) . $buffer;
+                $lines = explode("\n", $buffer);
+            }
+
+            $lines = array_filter($lines, fn ($l) => $l !== '');
+
+            return array_slice(array_values($lines), -$maxLines);
+        } finally {
+            fclose($fh);
         }
-
-        fclose($fh);
-
-        $lines = array_filter($lines, fn ($l) => $l !== '');
-
-        return array_slice(array_values($lines), -$maxLines);
     }
 }

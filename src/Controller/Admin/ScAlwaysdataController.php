@@ -53,6 +53,12 @@ class ScAlwaysdataController extends FrameworkBundleAdminController
     public function indexAction(Request $request): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('sc_alwaysdata_index', $request->request->get('_token'))) {
+                $this->addFlash('error', $this->trans('Jeton CSRF invalide.', 'Modules.Scalwaysdata.Admin'));
+
+                return $this->redirectToRoute('sc_alwaysdata_index');
+            }
+
             $logsPath = trim((string) $request->request->get('logs_path', ''));
             $htaccessPath = trim((string) $request->request->get('htaccess_path', ''));
 
@@ -97,7 +103,7 @@ class ScAlwaysdataController extends FrameworkBundleAdminController
      *     redirectRoute="admin_dashboard"
      * )
      */
-    public function analyseAction(Request $request): JsonResponse
+    public function analyseAction(): JsonResponse
     {
         try {
             $sources = $this->logReaderService->readTodayLogs();

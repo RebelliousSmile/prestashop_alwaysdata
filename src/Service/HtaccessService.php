@@ -59,7 +59,6 @@ class HtaccessService
             }
         } catch (\Throwable $e) {
             $current = '';
-            $htaccessPath = $this->getHtaccessPath();
         }
 
         $block = "\n# sc_alwaysdata block: {$ip}\n"
@@ -83,7 +82,6 @@ class HtaccessService
             }
         } catch (\Throwable $e) {
             $current = '';
-            $htaccessPath = $this->getHtaccessPath();
         }
 
         $block = "\n# sc_alwaysdata block UA: {$ua}\n"
