@@ -16,6 +16,15 @@ if (!defined('_PS_VERSION_')) {
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
 if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
+} else {
+    spl_autoload_register(function (string $class): void {
+        if (strncmp($class, 'ScAlwaysdata\\', 13) === 0) {
+            $file = __DIR__ . '/src/' . str_replace('\\', '/', substr($class, 13)) . '.php';
+            if (file_exists($file)) {
+                require_once $file;
+            }
+        }
+    });
 }
 
 class sc_alwaysdata extends Module
