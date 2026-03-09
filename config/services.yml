@@ -29,6 +29,3 @@ services:
       - [setContainer, ['@service_container']]
     tags:
       - { name: controller.service_arguments }
-
-  # FQCN alias so routes using FQCN _controller resolve correctly
-  ScAlwaysdata\Controller\Admin\ScAlwaysdataController: '@sc_alwaysdata.controller.sc_alwaysdata'
