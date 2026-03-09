@@ -27,5 +27,3 @@ services:
       - '@ScAlwaysdata\Service\HtaccessService'
     calls:
       - [setContainer, ['@service_container']]
-    tags:
-      - { name: controller.service_arguments }
