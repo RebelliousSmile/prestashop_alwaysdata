@@ -1,0 +1,22 @@
+{
+    "name": "scriptami/sc_alwaysdata",
+    "description": "Analyse les logs Alwaysdata et gère le fichier .htaccess",
+    "type": "prestashop-module",
+    "license": "AFL-3.0",
+    "authors": [
+        {
+            "name": "Scriptami"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ScAlwaysdata\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

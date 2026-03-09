@@ -1,0 +1,21 @@
+sc_alwaysdata_index:
+  path: /sc-alwaysdata/index
+  methods: [GET, POST]
+  defaults:
+    _controller: 'ScAlwaysdata\Controller\Admin\ScAlwaysdataController::indexAction'
+    _legacy_controller: AdminScAlwaysdata
+    _legacy_link: AdminScAlwaysdata
+
+sc_alwaysdata_analyse:
+  path: /sc-alwaysdata/analyse
+  methods: [POST]
+  defaults:
+    _controller: 'ScAlwaysdata\Controller\Admin\ScAlwaysdataController::analyseAction'
+    _legacy_controller: AdminScAlwaysdata
+
+sc_alwaysdata_apply_block:
+  path: /sc-alwaysdata/apply-block
+  methods: [POST]
+  defaults:
+    _controller: 'ScAlwaysdata\Controller\Admin\ScAlwaysdataController::applyBlockAction'
+    _legacy_controller: AdminScAlwaysdata
