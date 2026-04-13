@@ -12,8 +12,10 @@ declare(strict_types=1);
 namespace ScAlwaysdata\Controller\Admin;
 
 use Configuration;
+use Db;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use ScAlwaysdata\Entity\DailyStat;
 use ScAlwaysdata\Service\CrawlerAnalyserService;
 use ScAlwaysdata\Service\HtaccessService;
 use ScAlwaysdata\Service\LogReaderService;
@@ -52,6 +54,8 @@ class ScAlwaysdataController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request): Response
     {
+        $this->ensureStatsTable();
+
         if ($request->isMethod('POST')) {
             $logsPath = trim((string) $request->request->get('logs_path', ''));
             $htaccessPath = trim((string) $request->request->get('htaccess_path', ''));
@@ -139,6 +143,19 @@ class ScAlwaysdataController extends FrameworkBundleAdminController
      *     redirectRoute="admin_dashboard"
      * )
      */
+    private function ensureStatsTable(): void
+    {
+        $tableExists = (bool) Db::getInstance()->getValue(
+            'SELECT COUNT(*) FROM information_schema.TABLES
+             WHERE TABLE_SCHEMA = DATABASE()
+             AND TABLE_NAME = \'' . _DB_PREFIX_ . 'sc_alwaysdata_stats_daily\''
+        );
+
+        if (!$tableExists) {
+            Db::getInstance()->execute(DailyStat::getCreateTableSql());
+        }
+    }
+
     public function applyBlockAction(Request $request): JsonResponse
     {
         if (!$this->isCsrfTokenValid('sc_alwaysdata_apply_block', $request->request->get('_token'))) {

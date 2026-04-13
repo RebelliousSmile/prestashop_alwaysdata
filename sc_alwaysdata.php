@@ -24,6 +24,7 @@ class sc_alwaysdata extends Module
 
     public const CONFIG_LOGS_PATH = 'SC_ALWAYSDATA_LOGS_PATH';
     public const CONFIG_HTACCESS_PATH = 'SC_ALWAYSDATA_HTACCESS_PATH';
+    public const CONFIG_CRON_TOKEN = 'SC_ALWAYSDATA_CRON_TOKEN';
 
     public function __construct()
     {
@@ -49,14 +50,18 @@ class sc_alwaysdata extends Module
 
     public function install(): bool
     {
-        return parent::install();
+        return parent::install()
+            && $this->createStatsTable()
+            && $this->initCronToken();
     }
 
     public function uninstall(): bool
     {
         return parent::uninstall()
             && Configuration::deleteByName(self::CONFIG_LOGS_PATH)
-            && Configuration::deleteByName(self::CONFIG_HTACCESS_PATH);
+            && Configuration::deleteByName(self::CONFIG_HTACCESS_PATH)
+            && Configuration::deleteByName(self::CONFIG_CRON_TOKEN)
+            && $this->dropStatsTable();
     }
 
     public function getContent(): void
@@ -64,5 +69,28 @@ class sc_alwaysdata extends Module
         Tools::redirectAdmin(
             $this->context->link->getAdminLink('AdminScAlwaysdata')
         );
+    }
+
+    private function createStatsTable(): bool
+    {
+        require_once __DIR__ . '/src/Entity/DailyStat.php';
+
+        return Db::getInstance()->execute(\ScAlwaysdata\Entity\DailyStat::getCreateTableSql());
+    }
+
+    private function dropStatsTable(): bool
+    {
+        return Db::getInstance()->execute(
+            'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'sc_alwaysdata_stats_daily`'
+        );
+    }
+
+    private function initCronToken(): bool
+    {
+        if (!Configuration::get(self::CONFIG_CRON_TOKEN)) {
+            return Configuration::set(self::CONFIG_CRON_TOKEN, Tools::passwdGen(32));
+        }
+
+        return true;
     }
 }
